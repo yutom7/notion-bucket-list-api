@@ -1,7 +1,6 @@
 import { Client } from '@notionhq/client';
 import { NextResponse } from 'next/server';
 
-// Notionクライアントの初期化
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const DATABASE_ID = process.env.DATABASE_ID;
 
@@ -10,28 +9,29 @@ export async function GET() {
         const response = await notion.databases.query({
             database_id: DATABASE_ID!,
             filter: {
-                property: "ステータス", // あなたのDBの「未完了」を示す列名に合わせてください
+                property: "ステータス", // スクリーンショット通り
                 status: {
-                    does_not_equal: "Done",
+                    equals: "未完了", // スクリーンショット通り
                 },
             },
             sorts: [
                 {
-                    property: "期限", // 期限が近い順
+                    property: "期限", // スクリーンショット通り
                     direction: "ascending",
                 },
             ],
-            page_size: 3, // 上位3件のみ
+            page_size: 5,
         });
 
         const tasks = response.results.map((page: any) => ({
             id: page.id,
-            title: page.properties.名前.title[0]?.plain_text || "無題",
-            deadline: page.properties.期限.date?.start || "期限なし",
+            title: page.properties["やりたいことリスト"].title[0]?.plain_text || "無題", // ここを修正！
+            deadline: page.properties["期限"].date?.start || "期限なし",
         }));
 
         return NextResponse.json(tasks);
     } catch (error) {
+        console.error(error);
         return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
     }
 }
