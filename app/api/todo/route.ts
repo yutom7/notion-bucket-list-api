@@ -20,7 +20,6 @@ export async function GET() {
                     direction: "ascending",
                 },
             ],
-            page_size: 5,
         });
 
         const tasks = response.results.map((page: any) => ({
