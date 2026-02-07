@@ -26,6 +26,7 @@ export async function GET() {
             id: page.id,
             title: page.properties["やりたいことリスト"].title[0]?.plain_text || "無題", // ここを修正！
             deadline: page.properties["期限"].date?.start || "期限なし",
+            genre: page.properties["ジャンル"].select?.name || "未分類",
         }));
 
         return NextResponse.json(tasks);
