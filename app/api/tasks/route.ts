@@ -9,7 +9,7 @@ export const fetchCache = 'force-no-store';
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 // ★ここにタスク管理のIDが入っているか確認してください！
-const DATABASE_ID = "YOUR_DATABASE_ID_HERE";
+const DATABASE_ID = "2d7fc21646f680a695d7c573b2188cae";
 
 export async function GET() {
   try {
