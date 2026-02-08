@@ -32,28 +32,5 @@
                 android:resource="@xml/bucket_list_widget_info" />
         </receiver>
 
-        <receiver
-            android:name=".TaskWidgetReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/task_widget_info" />
-        </receiver>
-
-        <receiver
-            android:name=".TodayTaskWidgetReceiver"
-            android:label="今日のタスク"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/bucket_list_widget_info" />
-        </receiver>
-
     </application>
 </manifest>
