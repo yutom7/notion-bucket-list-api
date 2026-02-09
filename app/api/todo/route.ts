@@ -34,22 +34,30 @@ export async function GET() {
             },
             sorts: [
                 {
-                    property: "期限",
+                    property: "達成日",
                     direction: "descending", // 完了は新しい順
                 },
             ],
         });
 
-        const mapTask = (page: any, isCompleted: boolean) => ({
+        const mapIncompleteTask = (page: any) => ({
             id: page.id,
             title: page.properties["やりたいことリスト"].title[0]?.plain_text || "無題",
             deadline: page.properties["期限"].date?.start || "期限なし",
             genre: page.properties["ジャンル"].select?.name || "未分類",
-            isCompleted: isCompleted,
+            isCompleted: false,
         });
 
-        const incompleteTasks = incompleteResponse.results.map((page: any) => mapTask(page, false));
-        const completeTasks = completeResponse.results.map((page: any) => mapTask(page, true));
+        const mapCompleteTask = (page: any) => ({
+            id: page.id,
+            title: page.properties["やりたいことリスト"].title[0]?.plain_text || "無題",
+            deadline: page.properties["達成日"].date?.start || "達成日なし", // 達成日を使用
+            genre: page.properties["ジャンル"].select?.name || "未分類",
+            isCompleted: true,
+        });
+
+        const incompleteTasks = incompleteResponse.results.map((page: any) => mapIncompleteTask(page));
+        const completeTasks = completeResponse.results.map((page: any) => mapCompleteTask(page));
 
         // 未完了を先に、完了を後に
         const allTasks = [...incompleteTasks, ...completeTasks];

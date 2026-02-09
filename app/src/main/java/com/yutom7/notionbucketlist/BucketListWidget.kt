@@ -77,7 +77,8 @@ class BucketListWidget : GlanceAppWidget() {
                         items(incompleteTasks) { task ->
                             TaskRow(
                                 task = task,
-                                checkmark = "☑️",
+                                checkmark = "✅",
+                                dateIcon = "📅",
                                 titleColor = ColorProvider(black),
                                 gray = gray,
                                 blue = blue
@@ -104,7 +105,8 @@ class BucketListWidget : GlanceAppWidget() {
                         items(completedTasks) { task ->
                             TaskRow(
                                 task = task,
-                                checkmark = "✅",
+                                checkmark = "🌟",
+                                dateIcon = "🎉",
                                 titleColor = ColorProvider(gray), // 完了は薄い色
                                 gray = gray,
                                 blue = blue
@@ -121,6 +123,7 @@ class BucketListWidget : GlanceAppWidget() {
 private fun TaskRow(
     task: TodoItem,
     checkmark: String,
+    dateIcon: String,
     titleColor: ColorProvider,
     gray: androidx.compose.ui.graphics.Color,
     blue: androidx.compose.ui.graphics.Color
@@ -149,7 +152,7 @@ private fun TaskRow(
 
             Row {
                 Text(
-                    text = "📅 ${task.deadline}",
+                    text = "$dateIcon ${task.deadline}",
                     style = TextStyle(
                         color = ColorProvider(gray),
                         fontSize = 10.sp
