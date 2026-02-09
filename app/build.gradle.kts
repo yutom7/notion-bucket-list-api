@@ -66,5 +66,11 @@ dependencies {
     // Vercelと通信するための道具
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // WorkManager（バックグラウンド処理）
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+
+    // OkHttp（タイムアウト設定用）
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // --- ここまで追加 ---
 }

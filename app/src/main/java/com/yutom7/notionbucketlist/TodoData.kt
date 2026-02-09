@@ -4,5 +4,6 @@ data class TodoItem(
     val id: String,
     val title: String,
     val deadline: String,
-    val genre: String // ★ 受け皿を追加
+    val genre: String,
+    val isCompleted: Boolean = false // 完了フラグを追加
 )

@@ -6,30 +6,55 @@ const DATABASE_ID = process.env.DATABASE_ID;
 
 export async function GET() {
     try {
-        const response = await notion.databases.query({
+        // 未完了タスクを取得
+        const incompleteResponse = await notion.databases.query({
             database_id: DATABASE_ID!,
             filter: {
-                property: "ステータス", // スクリーンショット通り
+                property: "ステータス",
                 status: {
-                    equals: "未完了", // スクリーンショット通り
+                    equals: "未完了",
                 },
             },
             sorts: [
                 {
-                    property: "期限", // スクリーンショット通り
+                    property: "期限",
                     direction: "ascending",
                 },
             ],
         });
 
-        const tasks = response.results.map((page: any) => ({
+        // 完了タスクを取得
+        const completeResponse = await notion.databases.query({
+            database_id: DATABASE_ID!,
+            filter: {
+                property: "ステータス",
+                status: {
+                    equals: "完了",
+                },
+            },
+            sorts: [
+                {
+                    property: "期限",
+                    direction: "descending", // 完了は新しい順
+                },
+            ],
+        });
+
+        const mapTask = (page: any, isCompleted: boolean) => ({
             id: page.id,
-            title: page.properties["やりたいことリスト"].title[0]?.plain_text || "無題", // ここを修正！
+            title: page.properties["やりたいことリスト"].title[0]?.plain_text || "無題",
             deadline: page.properties["期限"].date?.start || "期限なし",
             genre: page.properties["ジャンル"].select?.name || "未分類",
-        }));
+            isCompleted: isCompleted,
+        });
 
-        return NextResponse.json(tasks);
+        const incompleteTasks = incompleteResponse.results.map((page: any) => mapTask(page, false));
+        const completeTasks = completeResponse.results.map((page: any) => mapTask(page, true));
+
+        // 未完了を先に、完了を後に
+        const allTasks = [...incompleteTasks, ...completeTasks];
+
+        return NextResponse.json(allTasks);
     } catch (error) {
         console.error(error);
         return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
