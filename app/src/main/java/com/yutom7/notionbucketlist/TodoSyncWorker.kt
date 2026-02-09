@@ -90,7 +90,12 @@ class TodoSyncWorker(
 
             // フィルタリング（ソートはAPI側で完了済み）
             val filteredTasks = allTasks
-                .filter { it.deadline <= "2026-12-31" }
+                .filter { 
+                    it.deadline.isEmpty() || 
+                    it.deadline == "期限なし" || 
+                    it.deadline == "達成日なし" || 
+                    it.deadline <= "2026-12-31" 
+                }
 
             // キャッシュに保存
             val repository = TodoRepository(applicationContext)
