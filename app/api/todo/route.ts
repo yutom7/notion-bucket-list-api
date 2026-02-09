@@ -35,7 +35,7 @@ export async function GET() {
             sorts: [
                 {
                     property: "達成日",
-                    direction: "descending", // 完了は新しい順
+                    direction: "descending",
                 },
             ],
         });
@@ -43,7 +43,7 @@ export async function GET() {
         const mapIncompleteTask = (page: any) => ({
             id: page.id,
             title: page.properties["やりたいことリスト"].title[0]?.plain_text || "無題",
-            deadline: page.properties["期限"].date?.start || "期限なし",
+            deadline: page.properties["期限"].date?.start || "",
             genre: page.properties["ジャンル"].select?.name || "未分類",
             isCompleted: false,
         });
@@ -51,13 +51,23 @@ export async function GET() {
         const mapCompleteTask = (page: any) => ({
             id: page.id,
             title: page.properties["やりたいことリスト"].title[0]?.plain_text || "無題",
-            deadline: page.properties["達成日"].date?.start || "達成日なし", // 達成日を使用
+            deadline: page.properties["達成日"].date?.start || "",
             genre: page.properties["ジャンル"].select?.name || "未分類",
             isCompleted: true,
         });
 
-        const incompleteTasks = incompleteResponse.results.map((page: any) => mapIncompleteTask(page));
-        const completeTasks = completeResponse.results.map((page: any) => mapCompleteTask(page));
+        let incompleteTasks = incompleteResponse.results.map((page: any) => mapIncompleteTask(page));
+        let completeTasks = completeResponse.results.map((page: any) => mapCompleteTask(page));
+
+        // 日付が空のものを先頭に、日付があるものを後ろにソート
+        const sortByDateEmptyFirst = (a: any, b: any) => {
+            if (a.deadline === "" && b.deadline !== "") return -1;
+            if (a.deadline !== "" && b.deadline === "") return 1;
+            return 0; // 既存の順序を維持
+        };
+
+        incompleteTasks = incompleteTasks.sort(sortByDateEmptyFirst);
+        completeTasks = completeTasks.sort(sortByDateEmptyFirst);
 
         // 未完了を先に、完了を後に
         const allTasks = [...incompleteTasks, ...completeTasks];

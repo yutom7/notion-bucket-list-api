@@ -105,7 +105,7 @@ class BucketListWidget : GlanceAppWidget() {
                         items(completedTasks) { task ->
                             TaskRow(
                                 task = task,
-                                checkmark = "🌟",
+                                checkmark = "✅",
                                 dateIcon = "🎉",
                                 titleColor = ColorProvider(gray), // 完了は薄い色
                                 gray = gray,
@@ -151,15 +151,16 @@ private fun TaskRow(
             )
 
             Row {
-                Text(
-                    text = "$dateIcon ${task.deadline}",
-                    style = TextStyle(
-                        color = ColorProvider(gray),
-                        fontSize = 10.sp
+                if (task.deadline.isNotEmpty()) {
+                    Text(
+                        text = "$dateIcon ${task.deadline}",
+                        style = TextStyle(
+                            color = ColorProvider(gray),
+                            fontSize = 10.sp
+                        )
                     )
-                )
-
-                Spacer(GlanceModifier.width(8.dp))
+                    Spacer(GlanceModifier.width(8.dp))
+                }
 
                 Text(
                     text = "🏷 ${task.genre}",
